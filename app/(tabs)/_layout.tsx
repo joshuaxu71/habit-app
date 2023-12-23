@@ -1,7 +1,7 @@
+import { AntDesign } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { Pressable, useColorScheme } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 
 export default function TabLayout() {
@@ -13,6 +13,12 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tabIconSelected,
         tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].tabIconDefault,
       }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          href: null
+        }}
+      />
       <Tabs.Screen
         name="dailyView"
         options={{
