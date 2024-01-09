@@ -2,7 +2,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
-import { Switch } from 'react-native-paper';
+import { Switch, TextInput } from 'react-native-paper';
 import Colors from '../constants/Colors';
 
 export interface SettingsItemProps {
@@ -10,13 +10,16 @@ export interface SettingsItemProps {
   title: string,
   description?: string,
   showSwitch: boolean,
+  notificationReminder?: number,
   routeName?: string;
 }
 
-export default function SettingsListItem({ id, title, description, showSwitch, routeName}: SettingsItemProps) {
+export default function SettingsListItem({ id, title, description, showSwitch, notificationReminder, routeName }: SettingsItemProps) {
   const expandable = description != null
+
   const [checked, setChecked] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [textValue, setTextValue] = useState(notificationReminder);
   const navigation = useNavigation();
 
   const colorScheme = useColorScheme();
@@ -29,6 +32,12 @@ export default function SettingsListItem({ id, title, description, showSwitch, r
     } else if (expandable) {
       setExpanded(!expanded);
     }
+  };
+
+  const handleTextChange = (text: number) => {
+    if (text > 0 && text < 100) {
+      setTextValue(text);
+    } 
   };
 
   const renderSettingItem = (
@@ -55,6 +64,21 @@ export default function SettingsListItem({ id, title, description, showSwitch, r
           </View>
           {showSwitch && (
             <Switch color="black" style={styles.settingsItemSwitch} value={checked} onValueChange={() => setChecked(!checked)} />
+          )}
+          {textValue != null && (
+            <TextInput
+              mode='outlined'
+              outlineColor='transparent'
+              keyboardType='number-pad'
+              activeOutlineColor='darkgray'
+              textColor={itemBackGroundColor}
+              selectionColor={textColor}
+              value={textValue.toString()}
+              onChangeText={textValue => {
+                handleTextChange(parseInt(textValue))
+              }}
+              style={styles.settingsItemTextInput}
+            />
           )}
         </View>
         {expanded && (
@@ -108,11 +132,18 @@ const styles = StyleSheet.create({
   settingsItemSwitch: {
     height: 10,
   },
+  settingsItemTextInput: {
+    marginRight: 5,
+    width: 45,
+    height: 25,
+    fontSize: 14, 
+    backgroundColor: 'white',
+  },
   settingsItemDescription: { 
     padding: 10, 
     fontSize: 14, 
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    backgroundColor: 'darkgray',
+    backgroundColor: 'gray',
   },
 });
