@@ -1,9 +1,12 @@
-import { FlatList } from 'react-native';
+import { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 
 import HabitsListItem, { HabitsItemProps } from '../../../components/HabitsListItem';
 
+
 export default function HabitsScreen() {
-  const habitsData: HabitsItemProps[] = [
+  const [habitsData, setHabitsData] = useState<HabitsItemProps[]>([
     { id: '1', name: 'Wake Up', track: false, notificationEnabled: false, enablePosting: false },
     { id: '2', name: 'Meditate', track: true, priority: 1, notificationEnabled: false, enablePosting: false },
     { id: '3', name: 'Stretch', track: true, priority: 2, notificationEnabled: true, notificationReminder: 5, enablePosting: true },
@@ -16,15 +19,22 @@ export default function HabitsScreen() {
     { id: '10', name: 'Anki', track: true, priority: 7, notificationEnabled: false, enablePosting: false },
     { id: '11', name: 'Korean Studies', track: true, priority: 8, notificationEnabled: false, enablePosting: false },
     { id: '12', name: 'Piano Studies', track: true, priority: 9, notificationEnabled: false, enablePosting: false },
-  ];
+  ]);
 
-  const renderHabitItem = ({ item }: { item: HabitsItemProps }) => (
-    <HabitsListItem {...item}></HabitsListItem>
+  const renderHabitItem = ({item, drag, isActive}: { item: HabitsItemProps; drag: () => void; isActive: boolean }) => (
+    <ScaleDecorator>
+      <TouchableOpacity
+        onLongPress={drag}
+        disabled={isActive}>
+        <HabitsListItem {...item}></HabitsListItem>
+      </TouchableOpacity>
+    </ScaleDecorator>
   );
 
   return (
-    <FlatList
+    <DraggableFlatList
       data={habitsData}
+      onDragEnd={({ data }) => setHabitsData(data)}
       renderItem={renderHabitItem}
       keyExtractor={(item) => item.id}
     />
