@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
-import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 
 import HabitsListItem, { HabitsItemProps } from '../../../components/HabitsListItem';
 
@@ -22,13 +21,7 @@ export default function HabitsScreen() {
   ]);
 
   const renderHabitItem = ({item, drag, isActive}: { item: HabitsItemProps; drag: () => void; isActive: boolean }) => (
-    <ScaleDecorator>
-      <TouchableOpacity
-        onLongPress={drag}
-        disabled={isActive}>
-        <HabitsListItem {...item}></HabitsListItem>
-      </TouchableOpacity>
-    </ScaleDecorator>
+    <HabitsListItem item={item} drag={drag} isActive={isActive}></HabitsListItem>
   );
 
   return (

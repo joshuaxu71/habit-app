@@ -1,3 +1,4 @@
+import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
@@ -14,9 +15,10 @@ export interface HabitsItemProps {
   enablePosting: boolean,
 }
 
-export default function HabitsListItem({ id, name, track, priority, notificationEnabled, notificationReminder, enablePosting }: HabitsItemProps) {
-  const [tracked, setTracked] = useState(track);
-  const [_, setNotificationEnabled] = useState(notificationEnabled);
+export default function HabitsListItem({ item, drag, isActive }: { item: HabitsItemProps; drag: () => void; isActive: boolean }) {
+  // id, name, track, priority, notificationEnabled, notificationReminder, enablePosting
+  const [tracked, setTracked] = useState(item.track);
+  const [_, setNotificationEnabled] = useState(item.notificationEnabled);
   const navigation = useNavigation();
 
   const colorScheme = useColorScheme();
@@ -33,13 +35,19 @@ export default function HabitsListItem({ id, name, track, priority, notification
         <View style={[
           styles.habitsItemTitleContainer,
         ]}>
-          <View>
-            <TouchableOpacity onPress={() => handlePress(id)} style={styles.habitsItemTitleIconContainer}>
+          <View style={styles.habitsItemTitleIconContainer}>
+            <TouchableOpacity
+              style={ styles.habitsItemIcon }
+              onPressIn={drag}
+              disabled={isActive}>
+                <FontAwesome name="arrows-v" size={18} color={textColor} /> 
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePress(item.id)}>
               <Text style={[
                 styles.habitsItemTitle,
                 { color: textColor }
               ]}> 
-                {name} 
+                {item.name} 
               </Text> 
             </TouchableOpacity> 
           </View>
@@ -79,7 +87,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   habitsItemIcon: {
-    marginRight: 5,
+    paddingLeft: 5,
+    paddingRight: 10,
     justifyContent: 'flex-start',
   }, 
   habitsItemTitle: {
